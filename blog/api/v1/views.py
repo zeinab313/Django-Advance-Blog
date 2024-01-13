@@ -4,12 +4,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
 
-from .serializer import PostSerializer
-from ...models import Post
+from .serializer import PostSerializer,CategorySerializer
+from ...models import Post,Category
 
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework import mixins
+from rest_framework import viewsets
 
 
 #example for function base view
@@ -44,7 +45,7 @@ def postDetail(request,id):
         post.delete()
         return Response({"detail":"item removed successfully "},status=status.HTTP_204_NO_CONTENT)"""
 
-
+#example for APIView for class base view
 '''class PostList(APIView):
     """getting a list of post and creating a new posts"""
     permission_classes=[IsAuthenticatedOrReadOnly]
@@ -87,7 +88,8 @@ def postDetail(request,id):
         return Response({"detail":"item removed successfully "},status=status.HTTP_204_NO_CONTENT)
         '''
 
-class PostList(ListCreateAPIView):
+#example for GenericView for class base view
+'''class PostList(ListCreateAPIView):
     """getting a list of post and creating a new posts"""
     permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class=PostSerializer
@@ -100,4 +102,17 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
     serializer_class=PostSerializer
     queryset=Post.objects.filter(status=True)
 
+'''
+
+
+#example for ModelViewSet for class base view
+class PostModelViewSet(viewsets.ModelViewSet):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    serializer_class=PostSerializer
+    queryset=Post.objects.filter(status=True)
+
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    serializer_class=CategorySerializer
+    queryset=Category.objects.all()
 
