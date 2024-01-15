@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 
 from .serializer import PostSerializer,CategorySerializer
 from ...models import Post,Category
@@ -11,6 +12,8 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework import mixins
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter,OrderingFilter
 
 
 #example for function base view
@@ -107,9 +110,13 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
 
 #example for ModelViewSet for class base view
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAuthenticatedOrReadOnly]
+    permission_classes=[IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     serializer_class=PostSerializer
     queryset=Post.objects.filter(status=True)
+    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+    filterset_fields = ['category', 'auther','status']
+    search_fields=['title','content']
+    ordering_fields=['published_data']
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticatedOrReadOnly]
