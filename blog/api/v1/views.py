@@ -14,7 +14,7 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter,OrderingFilter
-
+from .paginations import DefaultPagination
 
 #example for function base view
 """
@@ -110,13 +110,15 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
 
 #example for ModelViewSet for class base view
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
+    permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class=PostSerializer
     queryset=Post.objects.filter(status=True)
-    # filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
     # filterset_fields = ['category', 'auther','status']
-    # search_fields=['title','content']
-    # ordering_fields=['published_data']
+    filterset_fields = {'category':["exact","in"],'auther':["exact","in"],'status':["exact","in"]}
+    search_fields=['title','content']
+    ordering_fields=['published_data']
+    pagination_class=DefaultPagination
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticatedOrReadOnly]
