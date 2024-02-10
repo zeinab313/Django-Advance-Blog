@@ -110,7 +110,7 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
 
 #example for ModelViewSet for class base view
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAuthenticatedOrReadOnly]
+    permission_classes=[IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     serializer_class=PostSerializer
     queryset=Post.objects.filter(status=True)
     filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
