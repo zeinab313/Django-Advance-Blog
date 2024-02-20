@@ -12,4 +12,7 @@ class IndexView(TemplateView):
         context=super().get_context_data(**kwargs)
         context['name']='ali'
         return context
-    
+
+
+class PostDetailView(TemplateView):
+    template_name='blog/post_list_api.html'
